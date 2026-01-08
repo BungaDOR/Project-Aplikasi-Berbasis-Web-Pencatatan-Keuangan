@@ -6,31 +6,69 @@ class Profil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 210, 208, 208),
       appBar: AppBar(
         title: Text("Profile"),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
 
-      body: Padding(
+      body: 
+      Padding(
         padding: const EdgeInsets.all(20),
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: const Color.fromARGB(255, 184, 218, 246),
-                    ),
-                    height: 100, width: 100,
-                    child: Icon(Icons.person, size: 50,),
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white
                   ),
-                ],
-              )
+                  height: 300, width: 300,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: const Color.fromARGB(255, 184, 218, 246),
+                        ),
+                        height: 100, width: 100,
+                        child: Icon(Icons.person, size: 50,),
+                      ),
+                      SizedBox(height: 7,),
+                      Text("Nama User",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                      SizedBox(height: 5,),
+                      Text("namaemail@gmail.com",
+                      style: TextStyle(color: const Color.fromARGB(255, 139, 138, 138), )),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                           Text("Logout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),),
+                           SizedBox(width: 5,),
+                           Icon(Icons.logout, color: Colors.red,)
+                        ],
+                      ),
+                        // Column(
+                        //   children: [
+                        //     Container(
+                        //     decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     color: Colors.white,
+                        //       ),
+                        //       child:Text("Logout"), 
+                        //       //height: 100, width: ,
+                        //     ),
+                        //   ],
+                        // )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
