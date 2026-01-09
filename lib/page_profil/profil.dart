@@ -46,6 +46,26 @@ class Profil extends StatelessWidget {
                       style: TextStyle(color: const Color.fromARGB(255, 139, 138, 138), )),
                       SizedBox(height: 20,),
                       Row(
+                        children: [
+                          Expanded(child: Container(
+                             height: 30,color: const Color.fromARGB(255, 228, 226, 226),
+                             padding: EdgeInsets.all(5),
+                             child: 
+                             Center(
+                               child: Text("Informasi Akun",
+                               style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey
+                               ),),
+                             ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Colors.grey,
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                            Text("Logout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),),
@@ -53,18 +73,6 @@ class Profil extends StatelessWidget {
                            Icon(Icons.logout, color: Colors.red,)
                         ],
                       ),
-                        // Column(
-                        //   children: [
-                        //     Container(
-                        //     decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //     color: Colors.white,
-                        //       ),
-                        //       child:Text("Logout"), 
-                        //       //height: 100, width: ,
-                        //     ),
-                        //   ],
-                        // )
                     ],
                   ),
                 ),
