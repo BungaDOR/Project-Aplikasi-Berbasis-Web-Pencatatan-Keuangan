@@ -105,6 +105,51 @@ class Profil extends StatelessWidget {
                   ),
                 ),
 
+                SizedBox(height: 20,),
+
+                Row(
+                  children: [ Expanded(child: 
+                    Container( height: 30,color: Colors.grey[200], 
+                      padding: EdgeInsets.all(5), 
+                        child: Text("Tentang Aplikasi", 
+                        style: TextStyle( 
+                          fontWeight: FontWeight.w600, color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 15),
+
+                Padding(
+                  padding:EdgeInsetsGeometry.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.sticky_note_2, color: Colors.grey[600]),
+                       SizedBox(width: 8),
+                       Text("Aplikasi Pencatatan Keuangan"),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 4,),
+
+                Padding(
+                  padding:EdgeInsetsGeometry.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings, color: Colors.grey[600]),
+                       SizedBox(width: 8),
+                       Text("Versi"),
+                       SizedBox(width: 5,),
+                       Text("1.0.0")
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 4,),
 
                  SizedBox(height: 20),
                  Divider(),
