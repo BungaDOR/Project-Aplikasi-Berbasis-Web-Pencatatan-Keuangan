@@ -6,80 +6,128 @@ class Profil extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 210, 208, 208),
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         title: Text("Profile"),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
 
-      body: 
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 100,
+                  width: 100,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white
+                    shape: BoxShape.circle,
+                    color: const Color.fromARGB(255, 184, 218, 246),
                   ),
-                  height: 300, width: 300,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: const Color.fromARGB(255, 184, 218, 246),
-                        ),
-                        height: 100, width: 100,
-                        child: Icon(Icons.person, size: 50,),
-                      ),
-                      SizedBox(height: 7,),
-                      Text("Nama User",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                      SizedBox(height: 5,),
-                      Text("namaemail@gmail.com",
-                      style: TextStyle(color: const Color.fromARGB(255, 139, 138, 138), )),
-                      SizedBox(height: 20,),
-                      Row(
-                        children: [
-                          Expanded(child: Container(
-                             height: 30,color: const Color.fromARGB(255, 228, 226, 226),
-                             padding: EdgeInsets.all(5),
-                             child: 
-                             Center(
-                               child: Text("Informasi Akun",
-                               style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey
-                               ),),
-                             ),
-                            ),
+                  child: Icon(Icons.person, size: 60),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Nama User",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "namaemail@gmail.com",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+
+                Row(
+                  children: [ Expanded(child: 
+                    Container( height: 30,color: Colors.grey[200], 
+                      padding: EdgeInsets.all(5), 
+                        child: Text("Informasi Akun", 
+                        style: TextStyle( 
+                          fontWeight: FontWeight.w600, color: Colors.grey[600],
                           ),
-                        ],
+                        ),
                       ),
-                      Divider(
-                        color: Colors.grey,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                           Text("Logout", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.red),),
-                           SizedBox(width: 5,),
-                           Icon(Icons.logout, color: Colors.red,)
-                        ],
-                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 15),
+
+                Padding(
+                  padding:EdgeInsetsGeometry.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person, color: Colors.grey[600]),
+                       SizedBox(width: 8),
+                       Text("Username"),
+                       Spacer(),
+                      Text("NamaUser", style: TextStyle(color: Colors.grey[600])),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                SizedBox(height: 4,),
+
+                Padding(
+                  padding:EdgeInsetsGeometry.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.email, color: Colors.grey[600]),
+                       SizedBox(width: 8),
+                       Text("Email"),
+                       Spacer(),
+                      Text("namaemail@gmail.com", style: TextStyle(color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 4,),
+
+                Padding(
+                  padding:EdgeInsetsGeometry.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.grey[600]),
+                       SizedBox(width: 8),
+                       Text("Status"),
+                       Spacer(),
+                      Text("Aktif", style: TextStyle(color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+
+
+                 SizedBox(height: 20),
+                 Divider(),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Logout",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(Icons.logout, color: Colors.red),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
+      ),
     );
   }
 }
