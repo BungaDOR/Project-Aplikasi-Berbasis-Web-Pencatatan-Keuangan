@@ -37,6 +37,7 @@ class _DaftarTransaksiState extends State<DaftarTransaksi> {
             Text("Belanja",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 109, 103, 103)),
             ),
+            // Daftar list
             // Container(
             //   height: 10,
             //   width: double.infinity,
