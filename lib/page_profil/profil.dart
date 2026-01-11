@@ -35,17 +35,17 @@ class Profil extends StatelessWidget {
                   ),
                   child: Icon(Icons.person, size: 60),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10),
+                Text(
                   "Nama User",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 5),
-                const Text(
+                SizedBox(height: 5),
+                Text(
                   "namaemail@gmail.com",
                   style: TextStyle(color: Colors.grey),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 Row(
                   children: [ Expanded(child: 
@@ -164,8 +164,8 @@ class Profil extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => RegisterPage()),
                     );
                   },
-                  icon: const Icon(Icons.logout, color: Colors.red),
-                  label: const Text(
+                  icon: Icon(Icons.logout, color: Colors.red),
+                  label: Text(
                     "Logout",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
