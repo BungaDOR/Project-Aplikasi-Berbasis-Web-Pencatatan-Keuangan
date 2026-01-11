@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_akhir_uas/authCoba/register.dart';
 
 class Profil extends StatelessWidget {
   const Profil({super.key});
@@ -154,19 +155,23 @@ class Profil extends StatelessWidget {
                  SizedBox(height: 20),
                  Divider(),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Logout",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
+               // Tombol Logout
+                TextButton.icon(
+                  onPressed: () {
+                    // Kembali ke halaman Register
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.logout, color: Colors.red),
+                  label: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
-                    SizedBox(width: 5),
-                    Icon(Icons.logout, color: Colors.red),
-                  ],
+                  ),
                 ),
               ],
             ),
