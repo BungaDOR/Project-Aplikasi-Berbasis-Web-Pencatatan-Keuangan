@@ -88,9 +88,177 @@ class _RekapKeuanganState extends State<RekapKeuangan> {
                 color: Colors.black),
                 ),
                 Divider(),
+                Text("Keuangan Anda", style: TextStyle(
+                  fontSize: 10, 
+                  fontWeight: FontWeight.w600, 
+                  color: Colors.grey),
+                ),
               ],
             ),
-          )
+          ),
+
+            Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Icon(Icons.business_center_sharp, color: Colors.blueGrey),
+                    SizedBox(width: 10),
+                    Text(
+                      "Gaji",
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                    Spacer(),
+                    Text(
+                      "Rp 19.000.000",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(height: 5,),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.food_bank, color: Colors.red),
+                      SizedBox(width: 10),
+                      Text(
+                        "Makanan",
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      ),
+                      Spacer(),
+                      Text(
+                        "Rp 1.500.000",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ),
+
+          SizedBox(height: 5,),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.shopping_cart, color: Colors.orange),
+                      SizedBox(width: 10),
+                      Text(
+                        "Belanja",
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      ),
+                      Spacer(),
+                      Text(
+                        "Rp 3.570.000",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ),
+
+          SizedBox(height: 5,),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.emoji_transportation_sharp, color: Colors.blue),
+                      SizedBox(width: 10),
+                      Text(
+                        "Transportasi",
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      ),
+                      Spacer(),
+                      Text(
+                        "Rp 500.000",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ),
+
+          SizedBox(height: 5,),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.food_bank, color: Colors.red),
+                      SizedBox(width: 10),
+                      Text(
+                        "Hiburan",
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      ),
+                      Spacer(),
+                      Text(
+                        "Rp 4.500.000",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ),
 
         ],
       ),
