@@ -14,6 +14,28 @@ class DashboardScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Selamat Datang, User!',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Ringkasan Keuangan Anda',
+              style: TextStyle(color: Colors.grey),
+            ),
+            SizedBox(height: 32),
+            Text(
+              'Transaksi Terbaru',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
