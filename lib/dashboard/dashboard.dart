@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _currentIndex = 0;
+
+  void _onNavTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,24 +27,31 @@ class DashboardScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            /// TEKS ATAS
+            const Text(
               'Selamat Datang, User!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            SizedBox(height: 4),
-            Text(
+            const SizedBox(height: 4),
+            const Text(
               'Ringkasan Keuangan Anda',
               style: TextStyle(color: Colors.grey),
             ),
+
             SizedBox(height: 15),
-            
+
+            /// RINGKASAN KEUANGAN
             Row(
-              children: [
+              children: const [
                 SummaryCard(
                   title: 'Total Pemasukan',
                   value: 'Rp -',
@@ -51,14 +71,64 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ],
             ),
+
             SizedBox(height: 32),
+
+            /// TRANSAKSI TERBARU
+            const Text(
+              'Transaksi Terbaru',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            /// PLACEHOLDER DATA CRUD
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Data transaksi terbaru akan tampil di sini',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
           ],
         ),
+      ),
+
+      /// NAVIGASI BAWAH
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onNavTap,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Transaksi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pie_chart),
+            label: 'Rekap',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
       ),
     );
   }
 }
 
+/// CARD RINGKASAN
 class SummaryCard extends StatelessWidget {
   final String title;
   final String value;
