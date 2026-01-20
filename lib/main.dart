@@ -44,32 +44,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-// COBAIN DULU
-// import 'package:flutter/material.dart';
-// import 'package:project_akhir_uas/authCoba/register.dart';
-
-
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Aplikasi Flutter',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       // Halaman pertama tampil
-//       home: RegisterPage(),
-//     );
-//   }
-// }
-
