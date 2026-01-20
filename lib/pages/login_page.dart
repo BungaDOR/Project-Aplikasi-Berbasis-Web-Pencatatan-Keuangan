@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:project_akhir_uas/pages/register_page.dart';
+import '../services/auth_services.dart';
+import '../provider/transaksi_provider.dart';
+import 'register_page.dart';
+import '../dashboard/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,73 +15,79 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String email = '';
-  String password = '';
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> login() async {
-    final url = Uri.parse('http://10.0.2.2:8000/api/auth/login');
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final AuthServices authServices = AuthServices();
+  bool isLoading = false;
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      isLoading = true;
+    });
 
     try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+      final result = await authServices.login(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      if (result['status'] == true) {
+        final String token = result['token'];
+
+        // Simpan token
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+
+        // Set token ke Provider
+        final transaksiProvider =
+            Provider.of<TransaksiProvider>(context, listen: false);
+        transaksiProvider.setToken(token);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Login berhasil, welcome ${data['user']['name']}',
-            ),
+          const SnackBar(
+            content: Text('Login berhasil'),
+            backgroundColor: Colors.green,
           ),
         );
 
-        // sementara arahkan ke halaman lain (sesuaikan kebutuhan)
+        // Ke Dashboard
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const RegisterPage()),
+          MaterialPageRoute(builder: (_) => const Dashboard()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login gagal: ${response.body}')),
+          SnackBar(
+            content: Text(result['message'] ?? 'Login gagal'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        const SnackBar(
+          content: Text('Terjadi kesalahan'),
+          backgroundColor: Colors.red,
+        ),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
-  }
-
-  InputDecoration _inputDecoration(String hint, IconData icon) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon),
-      filled: true,
-      fillColor: Colors.white,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.grey),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F6FA),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           child: Card(
             elevation: 6,
             shape: RoundedRectangleBorder(
@@ -86,76 +95,106 @@ class _LoginPageState extends State<LoginPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.account_balance_wallet,
-                    size: 60,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Login Keuangan',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.account_balance_wallet,
+                      size: 70,
+                      color: Colors.blue,
                     ),
-                  ),
-                  const SizedBox(height: 25),
-
-                  TextField(
-                    decoration:
-                        _inputDecoration('Email', Icons.email),
-                    onChanged: (value) => email = value,
-                  ),
-                  const SizedBox(height: 15),
-
-                  TextField(
-                    obscureText: true,
-                    decoration:
-                        _inputDecoration('Password', Icons.lock),
-                    onChanged: (value) => password = value,
-                  ),
-                  const SizedBox(height: 25),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: login,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade200,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Login Keuangan',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    const SizedBox(height: 25),
+
+                    // EMAIL
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email tidak boleh kosong';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Format email tidak valid';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 15),
+
+                    // PASSWORD
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password tidak boleh kosong';
+                        }
+                        if (value.length < 6) {
+                          return 'Password minimal 6 karakter';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 25),
+
+                    // BUTTON LOGIN
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'LOGIN',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // KE REGISTER
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterPage(),
+                          ),
+                        );
+                      },
                       child: const Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 16,
-                          letterSpacing: 1,
-                        ),
+                        'Belum punya akun? Daftar di sini',
+                        style: TextStyle(color: Colors.blue),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterPage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Belum punya akun? Daftar di sini',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

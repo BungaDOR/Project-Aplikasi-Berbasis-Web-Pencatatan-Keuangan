@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:project_akhir_uas/pages/login_page.dart';
+import '../services/auth_services.dart';
+import '../dashboard/dashboard.dart';
+import '../provider/transaksi_provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,141 +14,165 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String name = '';
-  String email = '';
-  String password = '';
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> register() async {
-    final url = Uri.parse('http://10.0.2.2:8000/api/auth/register');
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final AuthServices authService = AuthServices();
+  bool isLoading = false;
+
+  Future<void> _register() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => isLoading = true);
 
     try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'password': password,
-        }),
+      final result = await authService.register(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (result['status'] == true) {
+        final token = result['data']['token'] ?? '';
+
+        // Simpan token
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+
+        // Set token ke Provider
+        final provider =
+            Provider.of<TransaksiProvider>(context, listen: false);
+        provider.setToken(token);
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Register berhasil')),
+          const SnackBar(
+            content: Text('Registrasi berhasil'),
+            backgroundColor: Colors.green,
+          ),
         );
 
+        // Langsung ke Dashboard
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const LoginPage()),
+          MaterialPageRoute(builder: (_) => const Dashboard()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal: ${response.body}')),
+          SnackBar(
+            content: Text(result['message'] ?? 'Registrasi gagal'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+          content: Text('Terjadi kesalahan: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
+    } finally {
+      setState(() => isLoading = false);
     }
-  }
-
-  InputDecoration _inputDecoration(String hint, IconData icon) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon),
-      filled: true,
-      fillColor: Colors.white,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.grey),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F6FA),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
         title: const Text('Registrasi Akun'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Card(
-            elevation: 6,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.person_add,
-                    size: 60,
-                    color: Colors.blue,
-                  ),
+                  const Icon(Icons.person_add,
+                      size: 60, color: Colors.blue),
                   const SizedBox(height: 10),
                   const Text(
                     'Daftar Akun Keuangan',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 25),
+
+                  // NAMA
+                  TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nama Lengkap',
+                      prefixIcon: Icon(Icons.person),
                     ),
-                  ),
-                  const SizedBox(height: 25),
-
-                  TextField(
-                    decoration:
-                        _inputDecoration('Nama Lengkap', Icons.person),
-                    onChanged: (value) => name = value,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Nama wajib diisi' : null,
                   ),
                   const SizedBox(height: 15),
 
-                  TextField(
-                    decoration:
-                        _inputDecoration('Email', Icons.email),
-                    onChanged: (value) => email = value,
+                  // EMAIL
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Email wajib diisi';
+                      if (!value.contains('@')) return 'Email tidak valid';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 15),
 
-                  TextField(
+                  // PASSWORD
+                  TextFormField(
+                    controller: passwordController,
                     obscureText: true,
-                    decoration:
-                        _inputDecoration('Password', Icons.lock),
-                    onChanged: (value) => password = value,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    validator: (value) {
+                      if (value!.length < 6) {
+                        return 'Password minimal 6 karakter';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 25),
 
+                  // BUTTON DAFTAR
                   SizedBox(
                     width: double.infinity,
-                    height: 48,
                     child: ElevatedButton(
-                      onPressed: register,
+                      onPressed: isLoading ? null : _register,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade200,
+                        padding:
+                            const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'DAFTAR',
-                        style: TextStyle(
-                          fontSize: 16,
-                          letterSpacing: 1,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white)
+                          : const Text(
+                              'DAFTAR',
+                              style: TextStyle(fontSize: 16),
+                            ),
                     ),
                   ),
                 ],
