@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
-  final String baseURL = 'http://10.0.2.2:8000/api';
+  final String baseURL = 'http://192.168.0.105:8000/api';
 
   // ================= REGISTER =================
   Future<Map<String, dynamic>> register({
@@ -24,6 +24,9 @@ class AuthServices {
         'password_confirmation': password,
       }),
     );
+    print('STATUS CODE: ${response.statusCode}');
+print('BODY: ${response.body}');
+
 
     final data = jsonDecode(response.body);
 
@@ -60,9 +63,7 @@ class AuthServices {
     final data = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      final String token = data['token'];
-
-      // Simpan token
+      String token = data['token']; 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
 
@@ -77,11 +78,12 @@ class AuthServices {
         'message': data['message'] ?? 'Login gagal',
       };
     }
+
   }
 
-  // ================= LOGOUT =================
+   // ================= LOGOUT =================
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
+    await prefs.remove('token'); // hapus token
   }
 }
