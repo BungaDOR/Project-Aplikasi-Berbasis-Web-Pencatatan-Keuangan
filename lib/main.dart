@@ -7,7 +7,6 @@ import 'pages/register_page.dart';
 import 'dashboard/dashboard.dart';
 import 'daftar_transaksi/daftar_transaksi.dart';
 import 'page/tambah_transaksi_page.dart';
-import 'page/edit_transaksi_page.dart';
 import 'page_profil/profil.dart';
 import 'rekap_keuangan/rekap_keuangan.dart';
 
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
         '/rekap_keuangan': (context) => const RekapKeuangan(),
         '/profil': (context) => const ProfilPage(),
       },
-      // Edit transaksi pakai Navigator.push dengan parameter
     );
   }
 }
