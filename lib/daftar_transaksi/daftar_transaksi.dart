@@ -1,56 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../models/transaksi_model.dart';
+import '../page/tambah_transaksi_page.dart';
+import '../page/edit_transaksi_page.dart';
+import '../provider/transaksi_provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DaftarTransaksi extends StatefulWidget {
+  const DaftarTransaksi({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DaftarTransaksi(),
-    );
-  }
+  State<DaftarTransaksi> createState() => _DaftarTransaksiState();
 }
 
-class DaftarTransaksi extends StatelessWidget {
-  const DaftarTransaksi({super.key});
+class _DaftarTransaksiState extends State<DaftarTransaksi> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch data saat halaman dibuka
+    final provider = Provider.of<TransaksiProvider>(context, listen: false);
+    provider.fetchTransaksi();
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6, // ⬅️ DARI 5 JADI 6
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
+          title: const Text('Daftar Transaksi'),
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
-          title: const Text('Daftar Transaksi'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TambahTransaksiPage()),
+                );
+                if (result != null && result) {
+                  Provider.of<TransaksiProvider>(context, listen: false)
+                      .fetchTransaksi();
+                }
+              },
+            ),
+          ],
           bottom: const TabBar(
             isScrollable: true,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
             tabs: [
-              Tab(text: 'Semua'),
+              Tab(text: 'Semua'), 
               Tab(text: 'Pemasukan'),
               Tab(text: 'Makanan'),
               Tab(text: 'Transportasi'),
               Tab(text: 'Belanja'),
-              Tab(text: 'Hiburan'), // ⬅️ TAB BARU
+              Tab(text: 'Hiburan'),
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             TransaksiList(),
-            TransaksiList(),
-            TransaksiList(),
-            TransaksiList(),
-            TransaksiList(),
-            TransaksiList(), // ⬅️ VIEW HIBURAN
+            TransaksiList(filterJenis: 'pemasukan'),
+            TransaksiList(filterKategori: 'Makanan'),
+            TransaksiList(filterKategori: 'Transportasi'),
+            TransaksiList(filterKategori: 'Belanja'),
+            TransaksiList(filterKategori: 'Hiburan'),
           ],
         ),
       ),
@@ -59,159 +76,122 @@ class DaftarTransaksi extends StatelessWidget {
 }
 
 class TransaksiList extends StatelessWidget {
-  const TransaksiList({super.key});
+  final String? filterJenis;
+  final String? filterKategori;
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(12),
-      children: const [
-        CategoryTitle(title: 'Pemasukan'),
-        TransaksiTile(
-          icon: Icons.account_balance_wallet,
-          iconColor: Colors.green,
-          title: 'Gaji Bulanan',
-          date: '15-01-2026',
-          amount: '+ Rp 5.000.000',
-          amountColor: Colors.green,
-        ),
+  const TransaksiList({super.key, this.filterJenis, this.filterKategori});
 
-        CategoryTitle(title: 'Makanan'),
-        TransaksiTile(
-          icon: Icons.restaurant,
-          iconColor: Colors.orange,
-          title: 'Makan siang',
-          date: '20-01-2026',
-          amount: '- Rp 25.000',
-          amountColor: Colors.red,
-        ),
-        TransaksiTile(
-          icon: Icons.restaurant,
-          iconColor: Colors.orange,
-          title: 'Sarapan',
-          date: '19-01-2026',
-          amount: '- Rp 15.000',
-          amountColor: Colors.red,
-        ),
-
-        CategoryTitle(title: 'Transportasi'),
-        TransaksiTile(
-          icon: Icons.directions_bus,
-          iconColor: Colors.blue,
-          title: 'Ojek Online',
-          date: '18-01-2026',
-          amount: '- Rp 15.000',
-          amountColor: Colors.red,
-        ),
-        TransaksiTile(
-          icon: Icons.train,
-          iconColor: Colors.blue,
-          title: 'Tiket Kereta',
-          date: '10-01-2026',
-          amount: '- Rp 100.000',
-          amountColor: Colors.red,
-        ),
-
-        CategoryTitle(title: 'Belanja'),
-        TransaksiTile(
-          icon: Icons.shopping_bag,
-          iconColor: Colors.amber,
-          title: 'Beli Baju',
-          date: '08-01-2026',
-          amount: '- Rp 200.000',
-          amountColor: Colors.red,
-        ),
-        TransaksiTile(
-          icon: Icons.shopping_bag,
-          iconColor: Colors.amber,
-          title: 'Alat Tulis',
-          date: '05-01-2026',
-          amount: '- Rp 30.000',
-          amountColor: Colors.red,
-        ),
-
-        // ⬇️ KATEGORI BARU: HIBURAN
-        CategoryTitle(title: 'Hiburan'),
-        TransaksiTile(
-          icon: Icons.movie,
-          iconColor: Colors.purple,
-          title: 'Nonton Bioskop',
-          date: '22-01-2026',
-          amount: '- Rp 50.000',
-          amountColor: Colors.red,
-        ),
-        TransaksiTile(
-          icon: Icons.music_note,
-          iconColor: Colors.purple,
-          title: 'Langganan Musik',
-          date: '01-01-2026',
-          amount: '- Rp 30.000',
-          amountColor: Colors.red,
-        ),
-      ],
-    );
+  String formatRupiah(double value) {
+    // Format double jadi mata uang rupiah
+    return NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0)
+        .format(value);
   }
-}
-
-class CategoryTitle extends StatelessWidget {
-  final String title;
-
-  const CategoryTitle({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey,
-        ),
-      ),
-    );
-  }
-}
+    return Consumer<TransaksiProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-class TransaksiTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String date;
-  final String amount;
-  final Color amountColor;
+        List<TransaksiModel> list = provider.list;
 
-  const TransaksiTile({
-    super.key,
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.date,
-    required this.amount,
-    required this.amountColor,
-  });
+        // Filter jenis
+        if (filterJenis != null) {
+          list = list
+              .where((e) => e.jenis.toLowerCase() == filterJenis!.toLowerCase())
+              .toList();
+        }
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: iconColor.withOpacity(0.15),
-          child: Icon(icon, color: iconColor),
-        ),
-        title: Text(title, style: const TextStyle(fontSize: 15)),
-        subtitle: Text(date),
-        trailing: Text(
-          amount,
-          style: TextStyle(
-            color: amountColor,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+        // Filter kategori
+        if (filterKategori != null) {
+          list = list
+              .where((e) => e.kategori.toLowerCase() == filterKategori!.toLowerCase())
+              .toList();
+        }
+
+        if (list.isEmpty) {
+          return const Center(child: Text('Belum ada transaksi'));
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            final t = list[index];
+            final isPemasukan = t.jenis.toLowerCase() == 'pemasukan';
+
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor:
+                      isPemasukan ? Colors.green.shade100 : Colors.red.shade100,
+                  child: Icon(
+                    isPemasukan ? Icons.arrow_downward : Icons.arrow_upward,
+                    color: isPemasukan ? Colors.green : Colors.red,
+                  ),
+                ),
+                title: Text(t.namaTransaksi),
+                subtitle: Text(DateFormat('dd-MM-yyyy').format(t.tanggal)),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${isPemasukan ? '+' : '-'} Rp ${formatRupiah(t.total)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isPemasukan ? Colors.green : Colors.red,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => EditTransaksiPage(transaksi: t)),
+                        );
+                        if (result != null && result) provider.fetchTransaksi();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Hapus Transaksi'),
+                            content: Text(
+                                'Apakah kamu yakin ingin menghapus "${t.namaTransaksi}"?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text('Batal')),
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Hapus')),
+                            ],
+                          ),
+                        );
+
+                        if (confirm != null && confirm) {
+                          await provider.deleteTransaksi(t.id!);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Transaksi berhasil dihapus')),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
