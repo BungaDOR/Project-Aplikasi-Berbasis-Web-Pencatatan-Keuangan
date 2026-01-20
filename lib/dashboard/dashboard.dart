@@ -41,8 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
-            const Text(
+            SizedBox(height: 4),
+            Text(
               'Ringkasan Keuangan Anda',
               style: TextStyle(color: Colors.grey),
             ),
