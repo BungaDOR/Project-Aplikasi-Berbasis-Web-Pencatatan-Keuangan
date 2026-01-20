@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:project_akhir_uas/provider/transaksi_provider.dart';
+
 import 'pages/login_page.dart';
+import 'pages/register_page.dart';
+import 'dashboard/dashboard.dart';
+import 'daftar_transaksi/daftar_transaksi.dart';
+import 'page/tambah_transaksi_page.dart';
+import 'page/edit_transaksi_page.dart';
+import 'page_profil/profil.dart';
+import 'rekap_keuangan/rekap_keuangan.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TransaksiProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,23 +28,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Aplikasi Keuangan',
       debugShowCheckedModeBanner: false,
-      title: 'Pencatatan Keuangan',
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F7FA),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          centerTitle: true,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
-      home: const LoginPage(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/dashboard': (context) => const Dashboard(),
+        '/tambah_transaksi': (context) => const TambahTransaksiPage(),
+        '/daftar_transaksi': (context) => const DaftarTransaksi(),
+        '/rekap_keuangan': (context) => const RekapKeuangan(),
+        '/profil': (context) => const ProfilPage(),
+      },
+      // Edit transaksi pakai Navigator.push dengan parameter
     );
   }
 }
