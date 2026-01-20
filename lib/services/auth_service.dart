@@ -1,35 +1,89 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
-  final String baseURL = 'http://10.0.2.2:8000/api/';
+  final String baseURL = 'http://192.168.0.105:8000/api';
 
-  Future<http.Response> register(String name, String email, String password) async {
-    final url = Uri.parse(baseURL + 'auth/register');
+  // ================= REGISTER =================
+  Future<Map<String, dynamic>> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
     final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
+      Uri.parse('$baseURL/auth/register'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: jsonEncode({
         'name': name,
         'email': email,
         'password': password,
+        'password_confirmation': password,
       }),
     );
-    print(response.body);
-    return response;
+    print('STATUS CODE: ${response.statusCode}');
+print('BODY: ${response.body}');
+
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return {
+        'status': true,
+        'data': data,
+      };
+    } else {
+      return {
+        'status': false,
+        'message': data['message'] ?? 'Registrasi gagal',
+      };
+    }
   }
 
-  Future<http.Response> login(String email, String password) async {
-    final url = Uri.parse(baseURL + 'auth/login');
+  // ================= LOGIN =================
+  Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
     final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
+      Uri.parse('$baseURL/auth/login'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: jsonEncode({
         'email': email,
         'password': password,
       }),
     );
-    print(response.body);
-    return response;
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      String token = data['token']; 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', token);
+
+      return {
+        'status': true,
+        'token': token,
+        'user': data['user'],
+      };
+    } else {
+      return {
+        'status': false,
+        'message': data['message'] ?? 'Login gagal',
+      };
+    }
+
+  }
+
+   // ================= LOGOUT =================
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // hapus token
   }
 }
