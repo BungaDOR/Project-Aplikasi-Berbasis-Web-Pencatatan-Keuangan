@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/transaksi_model.dart';
 
 class TransaksiService {
-  static const String baseUrl = 'http://192.168.0.105:8000/api';
+  static const String baseUrl = 'http://192.168.100.231:8000/api';
 
   // Get daftar transaksi
   static Future<List<TransaksiModel>> getTransaksi(String token) async {

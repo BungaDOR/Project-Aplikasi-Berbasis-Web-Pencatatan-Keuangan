@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ProfilService {
-  static const String baseUrl = 'http://192.168.0.105:8000/api';
+  static const String baseUrl = 'http://192.168.100.231:8000/api';
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
     final response = await http.get(
