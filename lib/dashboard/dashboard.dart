@@ -59,7 +59,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Consumer<TransaksiProvider>(
       builder: (context, provider, child) {
-        /// COPY LIST BIAR AMAN
+        /// LIST
         final List<TransaksiModel> transaksi =
             List<TransaksiModel>.from(provider.list);
 
